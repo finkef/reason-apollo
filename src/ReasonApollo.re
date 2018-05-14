@@ -6,20 +6,22 @@ let createApolloClient =
       ~ssrForceFetchDelay=?,
       ~connectToDevTools=?,
       ~queryDeduplication=?,
-      ()
+      (),
     ) => {
   let apolloClientOptions = {
     "link": link,
     "cache": cache,
-    "ssrMode": Js.Nullable.from_opt(ssrMode),
-    "ssrForceFetchDelay": Js.Nullable.from_opt(ssrForceFetchDelay),
-    "connectToDevTools": Js.Nullable.from_opt(connectToDevTools),
-    "queryDeduplication": Js.Nullable.from_opt(queryDeduplication)
+    "ssrMode": Js.Nullable.fromOption(ssrMode),
+    "ssrForceFetchDelay": Js.Nullable.fromOption(ssrForceFetchDelay),
+    "connectToDevTools": Js.Nullable.fromOption(connectToDevTools),
+    "queryDeduplication": Js.Nullable.fromOption(queryDeduplication),
   };
-  ApolloClient.createApolloClient(apolloClientOptions)
+  ApolloClient.createApolloClient(apolloClientOptions);
 };
 
-module type ApolloClientConfig = {let apolloClient: ApolloClient.generatedApolloClient;};
+module type ApolloClientConfig = {
+  let apolloClient: ApolloClient.generatedApolloClient;
+};
 
 module CreateClient = (Config: ApolloClientConfig) => {
   let apolloClient = Config.apolloClient;
@@ -30,7 +32,7 @@ module CreateClient = (Config: ApolloClientConfig) => {
     ReasonApolloFactories.QueryFactory(
       {
         let apolloClient = apolloClient;
-      }
+      },
     );
   /*
    * Expose a module to perform "mutation" operations for the given client
@@ -39,6 +41,6 @@ module CreateClient = (Config: ApolloClientConfig) => {
     ReasonApolloFactories.MutationFactory(
       {
         let apolloClient = apolloClient;
-      }
+      },
     );
 };
